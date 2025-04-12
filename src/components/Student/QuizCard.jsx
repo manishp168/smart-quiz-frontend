@@ -14,15 +14,16 @@ const QuizCard = ({ totalQuestions, title, timeLimit, date, id }) => {
     <div
       className={`bg-white text-gray-900 rounded-xl p-6 shadow-lg min-w-auto max-w-md w-full border border-gray-300 flex flex-col gap-5 transition-transform duration-300 hover:scale-[1.02] h-full mx-auto`}
     >
-      <div className="flex justify-between ">
-        <div className="text-normal font-bold flex gap-2">
-          <MdOutlineQuiz className="text-indigo-500 text-2xl" />{" "}
-          <span className="line-clamp-1 overflow-hidden">{title}</span>
-        </div>
-        <span className="bg-indigo-100 text-indigo-700 px-3 py-1 ml-2 h-fit text-sm rounded-lg font-medium whitespace-nowrap">
-          {new Date(date).toLocaleDateString().replaceAll("/", "-")}
-        </span>
-      </div>
+      <div className="flex justify-between">
+  <div className="text-normal font-bold flex gap-2 flex-1 min-w-0">
+    <MdOutlineQuiz className="text-indigo-500 text-2xl" />
+    <span className="truncate break-all">{title}</span>
+  </div>
+  <span className="bg-indigo-100 text-indigo-700 px-3 py-1 ml-2 h-fit text-sm rounded-lg font-medium whitespace-nowrap">
+    {new Date(date).toLocaleDateString().replaceAll("/", "-")}
+  </span>
+</div>
+
 
       
      

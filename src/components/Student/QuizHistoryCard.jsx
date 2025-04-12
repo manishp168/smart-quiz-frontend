@@ -31,7 +31,7 @@ const QuizHistoryCard = ({
           <MdOutlineQuiz className="text-indigo-500 text-2xl" /> {title}
         </h3>
         <span className="bg-indigo-100 text-indigo-700 px-3 py-1 ml-2 h-fit text-sm rounded-lg font-medium whitespace-nowrap">
-          {`${new Date(date).toLocaleString().replaceAll("/", "-")}`}
+          {`${new Date(date).toLocaleDateString().replaceAll("/", "-")}`}
         </span>
       </div>
 
