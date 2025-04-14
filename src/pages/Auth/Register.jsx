@@ -33,7 +33,7 @@ const Register = () => {
     setInputFields((prevData) => ({ ...prevData, [fieldName]: fieldvalue }));
   };
 
-  const { registerHandler } = useAuthContext();
+  const { registerHandler, loading } = useAuthContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,6 +84,7 @@ const Register = () => {
   }, [error]);
   return (
     <>
+    <Loader loading={loading}/>
       <div className="min-h-screen h-full w-full flex flex-col justify-center items-center bg-gray-50 py-6 px-4">
         <div className="text-center mb-6 flex justify-center items-center gap-3">
           <img src={kkc} alt="" className="w-20 rounded-full" />
