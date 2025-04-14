@@ -16,6 +16,7 @@ const Result = ({ res }) => {
   const { userData } = useAuthContext();
 
   const convertTimeToString = (time) => {
+    time = time -1;
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 
@@ -34,7 +35,7 @@ const Result = ({ res }) => {
 
   const abcd = ["A", "B", "C", "D"];
   return data ? (
-    <div className="min-h-screen min-w-screen  md:h-full m-auto max-w-full min-w-[24rem] md:min-w-[32rem] md:max-w-lg bg-white rounded-md mb-6">
+    <div className="min-h-screen min-w-screen  md:h-full m-auto max-w-full  md:min-w-[24rem] md:max-w-lg bg-white rounded-md mb-6">
       <nav className="text-center shadow-sm p-4 text-gray-800 font-semibold">
         <h2>{data.quizTitle}</h2>
       </nav>
@@ -64,33 +65,11 @@ const Result = ({ res }) => {
               Score: {data.totalCorrect}/{data.questions.length}
             </p>
             <p className="text-gray-600 font-normal">
-              Duration: {convertTimeToString(data.timeTaken)} 
+              Duration: {convertTimeToString(data.timeTaken)}
             </p>
           </div>
         </div>
-        {/* <div className="text-center mx-4 mt-4 text-lg font-semibold flex justify-evenly items-center gap-1 border  py-4 bg-[#ffe6ffaa] rounded-md shadow-md">
-          <p className="text-gray-800 text-2xl font-semibold ">Score</p>
 
-          <div className="h-24 w-24 bg-white border border-gray-300 shadow-md rounded-full flex items-center justify-center gap-1 flex-col  text-2xl px-2 ">
-            <p>{data.totalCorrect}</p>
-            <span className="border-2 w-full"></span>
-            <p>{data.questions.length}</p>
-          </div>
-        </div> */}
-        {/* <div className="mx-4 flex justify-between gap-10 font-semibold">
-          <button
-            type="button"
-            className="bg-green-500 w-full text-white py-3 rounded-md"
-          >
-            My Quiz History
-          </button>
-          <button
-            type="button"
-            className="bg-blue-600 w-full text-white py-3 rounded-md"
-          >
-            Go To Dashboard
-          </button>
-        </div> */}
         <div className="my-2">
           <div
             className={`
@@ -104,15 +83,21 @@ const Result = ({ res }) => {
               <p className="font-semibold text-2xl">Questions & Answers</p>
             </div>
 
-            <div className={`mx-4 mt-0`}>
+            <div className="px-4 mt-0 space-y-6">
               {data.questions &&
                 data.questions.length > 0 &&
                 data.questions.map((question, index) => (
                   <div
-                    className="shadow-md border rounded-md p-4 mt-6"
+                    className="shadow-md border rounded-md p-4 mt-6 overflow-hidden max-w-full relative "
                     key={index}
                   >
-                    <p className="mb-4 text-gray-700">
+                    {!question.isAttempted && (
+                      <span className="absolute right-0 top-0 bg-blue-500 text-white text-sm font-semibold px-2 py-1 rounded-sm">
+                        Not Attempted
+                      </span>
+                    )}
+
+                    <p className={`mb-4 text-gray-700 ${question.isAttempted ? "" : "mt-4"}`}>
                       <span className="text-gray-800 font-semibold">
                         Q.{index + 1}{" "}
                       </span>{" "}

@@ -7,7 +7,6 @@ import LiveQuiz from "../../components/Student/LiveQuiz";
 const LiveQuizzes = () => {
   const [loading, setLoading] = useState(false);
 
-  console.log(setLoading)
   return (
     <>
       <Loader loading={loading} />

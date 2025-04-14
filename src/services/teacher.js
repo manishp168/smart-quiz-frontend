@@ -13,15 +13,13 @@ const getQuizzes = async (token) => {
       }
     );
     if (res.status === httpStatus.OK) {
-      console.log(res);
+
       return {
         status: true,
         data: res.data.data,
       };
     }
-    console.log(res);
   } catch (error) {
-    console.log(error);
   }
 };
 

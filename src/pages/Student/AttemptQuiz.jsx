@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import httpStatus from "http-status";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
-import { MdCheck, MdCheckCircle } from "react-icons/md";
+import { MdCheckCircle } from "react-icons/md";
 import { useAuthContext } from "../../context/AuthContext";
 import Result from "../../components/Student/Result";
 
@@ -14,8 +14,8 @@ const AttemptQuiz = () => {
   const [loading, setLoading] = useState(false);
   const { userData } = useAuthContext();
 
-  let time = useRef(null);
-  let countDown = useRef(null);
+  const time = useRef(null);
+  const countDown = useRef(null);
 
   const [questions, setQuestions] = useState();
   const [totalQuestion, setTotalQuestion] = useState(0);
@@ -28,16 +28,18 @@ const AttemptQuiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState();
 
   const [userQuizData, setUserQuizData] = useState([]);
+  const userQuizDataRef = useRef([]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [resultData, setResultData] = useState();
+
   const getQuizData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${import.meta.env.VITE_QUIZ_API_URL}/${id}`);
       if (res.status === httpStatus.OK) {
-        if (res.data.data.isPublished === false) {
-          toast.error("This quiz is private. you can't access.");
+        if (!res.data.data.isPublished) {
+          toast.error("This quiz is private and cannot be accessed.");
           return navigate("/home");
         }
         const data = res.data.data;
@@ -48,7 +50,7 @@ const AttemptQuiz = () => {
         setTimerStarted(true);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Server Error Please Try Again.");
+      toast.error(error.response?.data?.message || "Unable to fetch quiz data. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -65,19 +67,13 @@ const AttemptQuiz = () => {
     return () => clearInterval(countDown.current);
   }, [fullTime]);
 
-  
   const startTimer = () => {
-    time.current = fullTime - 1;
-    let minutes;
-    let seconds;
+    time.current = fullTime;
     countDown.current = setInterval(() => {
-      minutes = Math.floor(time.current / 60);
-      seconds = time.current % 60;
-      setTimeLeft(`${minutes}:${seconds}`);
       time.current--;
-      if (time.current < 0) {
-        clearInterval(countDown.current);
-      }
+      const minutes = Math.floor(time.current / 60);
+      const seconds = time.current % 60;
+      setTimeLeft(`${minutes}:${seconds < 10 ? "0" : ""}${seconds}`);
       if (time.current < 0) {
         clearInterval(countDown.current);
         submitQuiz();
@@ -87,41 +83,78 @@ const AttemptQuiz = () => {
 
   const handleNextBtn = () => {
     if (selectedAnswer === undefined) {
-      toast.error("Choose a option");
+      toast.error("Please select an option before continuing.");
       return;
     }
+    const currentQuestion = questions[questionIndex - 1];
+    const newData = {
+      question: currentQuestion.question,
+      type: currentQuestion.type,
+      options: currentQuestion.options.map((option, index) => ({
+        option: option.option,
+        isCorrect: option.isCorrect,
+        selectedAnswer: selectedAnswer === index,
+      })),
+      isAttempted: true,
+    };
+
     setUserQuizData((prev) => {
-      const currentQuestion = questions[questionIndex - 1];
-
-      const data = [
-        ...prev,
-        {
-          question: currentQuestion.question,
-          type: currentQuestion.type,
-          options: currentQuestion.options.map((option, index) => {
-            return {
-              option: option.option,
-              isCorrect: option.isCorrect,
-              selectedAnswer: selectedAnswer === index,
-            };
-          }),
-        },
-      ];
-
-      return data;
+      const updated = [...prev, newData];
+      userQuizDataRef.current = updated;
+      return updated;
     });
 
     setQuestionIndex((prev) => prev + 1);
-    setSelectedAnswer();
+    setSelectedAnswer(undefined);
+  };
+
+  const handleSubmit = () => {
+    if (questionIndex === totalQuestion && userQuizData.length < totalQuestion) {
+      const currentQuestion = questions[questionIndex - 1];
+      const newData = {
+        question: currentQuestion.question,
+        type: currentQuestion.type,
+        options: currentQuestion.options.map((option, index) => ({
+          option: option.option,
+          isCorrect: option.isCorrect,
+          selectedAnswer: selectedAnswer === index,
+        })),
+        isAttempted: true,
+      };
+
+      setUserQuizData((prev) => {
+        const updated = [...prev, newData];
+        userQuizDataRef.current = updated;
+        return updated;
+      });
+    } else if (userQuizData.length === totalQuestion) {
+      submitQuiz();
+    } else {
+      handleNextBtn();
+    }
   };
 
   const submitQuiz = async () => {
     setLoading(true);
     try {
+      const answeredCount = userQuizDataRef.current.length;
+
+      const unanswered = questions.slice(answeredCount).map((q) => ({
+        question: q.question,
+        type: q.type,
+        options: q.options.map((opt) => ({
+          option: opt.option,
+          isCorrect: opt.isCorrect,
+        })),
+        isAttempted: false,
+      }));
+
+      const fullQuizData = [...userQuizDataRef.current, ...unanswered];
+
       const res = await axios.post(
         `${import.meta.env.VITE_QUIZ_API_URL}/submit/${id}`,
         {
-          userQuizData,
+          userQuizData: fullQuizData,
           quizId: id,
           timeTaken: fullTime - time.current,
           title,
@@ -133,58 +166,25 @@ const AttemptQuiz = () => {
           },
         }
       );
-      console.log(res);
+
       if (res.status === httpStatus.OK) {
-        toast.success(res.data.message);
+        toast.success("Your Quiz have been submitted.");
         setResultData(res.data.data);
         setTimerStarted(false);
         setIsOpen(true);
       }
     } catch (error) {
-      if (
-        error.response?.data?.message ===
-        "You are already participated in this quiz"
-      ) {
-        toast.error(error.response?.data?.message);
-        setTimeout(() => {
-          navigate("/home");
-        }, 3000);
+      const statusCode = error.response?.data?.statusCode;
+      const msg = error.response?.data?.message;
+
+      if (statusCode === httpStatus.BAD_REQUEST) {
+        toast.error(msg || "Submission failed. Please try again.");
+        setTimeout(() => navigate("/home"), 3000);
         return;
       }
-      toast.error(error.response?.data?.message);
+      toast.error(msg || "An error occurred while submitting your quiz.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (
-      questionIndex === totalQuestion &&
-      userQuizData.length < totalQuestion
-    ) {
-      setUserQuizData((prev) => {
-        const currentQuestion = questions[questionIndex - 1];
-
-        const data = [
-          ...prev,
-          {
-            question: currentQuestion.question,
-            type: currentQuestion.type,
-            options: currentQuestion.options.map((option, index) => {
-              return {
-                option: option.option,
-                isCorrect: option.isCorrect,
-                selectedAnswer: selectedAnswer === index,
-              };
-            }),
-          },
-        ];
-        return data;
-      });
-    } else if (userQuizData.length === totalQuestion) {
-      submitQuiz();
-    } else {
-      handleNextBtn();
     }
   };
 
@@ -193,89 +193,83 @@ const AttemptQuiz = () => {
       submitQuiz();
     }
   }, [userQuizData, totalQuestion]);
+
   const abcd = ["A", "B", "C", "D"];
+
   return (
-    <div
-      className="bg-[#eaeaea]  min-h-screen w-full overflow-hidden md:flex md:item
-       justify-center"
-      style={{ scrollbarWidth: "none" }}
-    >
+    <div className="bg-[#eaeaea] min-h-screen w-full overflow-hidden md:flex md:items-center justify-center">
       <Loader loading={loading} bgWhite={true} />
       <div
-        className={`min-h-screen md:h-full m-auto  min-w-[24rem] md:min-w-[32rem] md:max-w-lg bg-white rounded-md mx-4 ${
-          isOpen ? "hidden" : "block" 
+        className={`min-h-screen md:h-full m-auto min-w-[24rem] md:min-w-[32rem] md:max-w-lg bg-white rounded-md mx-4 ${
+          isOpen ? "hidden" : "block"
         }`}
       >
         <nav className="flex justify-between items-center shadow-md p-4 text-gray-800 font-semibold">
-          <span className="whitespace-nowrap">
+          <span>
             Q. {questionIndex}/{totalQuestion}
           </span>
-
           <span>
-            {timeLeft}/{`${Math.floor(fullTime / 60)}:${"00"}`}
+            {timeLeft}/{`${Math.floor(fullTime / 60)}:00`}
           </span>
         </nav>
-        <div className="text-center mx-4 mt-4 text-lg font-semibold">
-          {title}
-        </div>
+
+        <div className="text-center mx-4 mt-4 text-lg font-semibold">{title}</div>
+
         <div className="px-4 my-10">
-          <p className=" text-gray-700">
+          <p className="text-gray-700">
             <span className="text-gray-800 font-semibold">Q.</span>
             {questions &&
               questions.length > 0 &&
-              questions[questionIndex - 1].question}
+              questions[questionIndex - 1]?.question}
           </p>
 
           <div className="mt-4">
-            {questions && questions.length > 0
-              ? questions[questionIndex - 1].options.map((option, index) => (
+            {questions &&
+              questions.length > 0 &&
+              questions[questionIndex - 1]?.options.map((option, index) => (
+                <div
+                  key={index}
+                  className="mb-2 cursor-pointer"
+                  onClick={() => setSelectedAnswer(index)}
+                >
                   <div
-                    key={index}
-                    className="mb-2 cursor-pointer"
-                    onClick={() => setSelectedAnswer(index)}
+                    className={`flex rounded-md ${
+                      selectedAnswer === index
+                        ? "bg-red-500 text-white"
+                        : "bg-slate-100"
+                    }`}
                   >
                     <div
-                      className={`flex rounded-md ${
+                      className={`flex items-center justify-center w-14 font-semibold text-black rounded-l-md ${
                         selectedAnswer === index
-                          ? "bg-red-500 text-white"
-                          : "bg-slate-100"
+                          ? "bg-gray-500 text-white"
+                          : "bg-gray-300"
                       }`}
                     >
-                      <div
-                        className={`flex items-center justify-center w-14 font-semibold text-black rounded-l-md  ${
-                          selectedAnswer === index
-                            ? "bg-gray-500 text-white"
-                            : "bg-gray-300"
-                        }`}
-                      >
-                        <span>{abcd[index]}</span>
-                      </div>
-                      <p
-                        className={`block w-full py-3 bg-transparent outline-none border-none rounded-l-sm px-3  font-semibold cursor-pointer ${
-                          selectedAnswer === index
-                            ? "text-white"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {option.option}
-                      </p>
-
-                      <div className=" flex items-center justify-center w-14 font-bold text-white ">
-                        {selectedAnswer === index ? (
-                          <MdCheckCircle className="text-2xl " />
-                        ) : (
-                          ""
-                        )}
-                      </div>
+                      <span>{abcd[index]}</span>
+                    </div>
+                    <p
+                      className={`block w-full py-3 px-3 font-semibold cursor-pointer ${
+                        selectedAnswer === index
+                          ? "text-white"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {option.option}
+                    </p>
+                    <div className="flex items-center justify-center w-14 text-white">
+                      {selectedAnswer === index && (
+                        <MdCheckCircle className="text-2xl" />
+                      )}
                     </div>
                   </div>
-                ))
-              : ""}
+                </div>
+              ))}
           </div>
 
           <div>
             <button
-              onClick={() => handleSubmit()}
+              onClick={handleSubmit}
               type="button"
               className="bg-blue-600 text-white w-full py-3 rounded-md mt-8"
             >

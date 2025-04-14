@@ -17,6 +17,7 @@ const Quizzes = () => {
   
 
   const getQuizData = async () => {
+    if (quizzes && quizzes.length > 0) return;
     setLoading(true);
     try {
       let res = await getQuizzes(userData.accessToken);
