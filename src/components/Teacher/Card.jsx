@@ -65,7 +65,7 @@ const Card = ({
           <span>Avarage Score</span>
         </div>
         <div className="h-16 w-16 bg-gray-200 border shadow-sm rounded-lg flex items-center justify-center gap-1 text-black flex-col px-2 font-semibold ">
-          <p>{`${avarageScore < 10 ? `0${avarageScore}` : avarageScore}`}</p>
+          <p>{`${Math.floor(avarageScore)}`}</p>
           <span className="border border-black w-full"></span>
           <p>{`${totalQuestion < 10 ? `0${totalQuestion}` : totalQuestion}`}</p>
         </div>

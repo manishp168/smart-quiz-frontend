@@ -9,6 +9,7 @@ import Loader from "../../components/Loader";
 import CreateQuizByAi from "../../components/Teacher/CreateQuizByAi";
 import { motion } from "framer-motion";
 import { Bot, Pencil } from "lucide-react";
+import ShareQuizModel from "../../components/Teacher/ShareQuizModel";
 
 const CreateQuiz = () => {
   const { userData } = useAuthContext();
@@ -16,6 +17,8 @@ const CreateQuiz = () => {
   const [loading, setLoading] = useState(false);
   const [hide, setHide] = useState(false);
   const navigate = useNavigate();
+  const [shareModelOpen, setShareModelOpen] = useState(false);
+  const [quizId, setQuizId] = useState("");
 
   const [questions, setQuestions] = useState([
     {
@@ -112,9 +115,11 @@ const CreateQuiz = () => {
 
       if (res.status === httpStatus.OK) {
         toast.success("Quiz created successfully");
-        setTimeout(() => {
-          navigate("/teacher/quizzes");
-        }, 3000);
+        setQuizId(res.data.data._id);
+        setShareModelOpen(true);
+        // setTimeout(() => {
+        //   navigate("/teacher/quizzes");
+        // }, 3000);
       } else {
         toast.error(res.data.message);
       }
@@ -124,11 +129,6 @@ const CreateQuiz = () => {
       console.log(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const generateQuiz = async () => {
-    if (condition) {
     }
   };
 
@@ -143,101 +143,111 @@ const CreateQuiz = () => {
       <Loader loading={loading} />
       <div className="bg-white rounded-lg mb-12 mx-4 py-6">
         <div className="mx-4">
+          <h1 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mb-8">
+            <motion.span
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-transparent bg-clip-text bg-gradient-to-r from-stone-500 to-green-700"
+            >
+              Create a Perfect Quiz
+            </motion.span>
+            <br />
+            <span
+              className={`text-2xl font-medium text-gray-600 mt-2 ${
+                hide ? "hidden" : "block"
+              }`}
+            >
+              Select AI or Manual to Create Your Quiz with Ease
+            </span>
+          </h1>
 
-        
-        <h1 className="text-center text-4xl md:text-5xl font-extrabold text-gray-900 mb-8">
-          <motion.span
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-stone-500 to-green-700"
+          <div
+            className={`grid md:grid-cols-2 gap-10 ${hide ? "hidden" : "flex"}`}
           >
-            Create a Perfect Quiz
-          </motion.span>
-          <br />
-          <span className={`text-2xl font-medium text-gray-600 mt-2 ${hide ? 'hidden': 'block'}`}>
-            Select AI or Manual to Create Your Quiz with Ease
-          </span>
-        </h1>
+            {/* AI Powered Quiz */}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsOpen(true)}
+              className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+            >
+              {/* Gradient Border on Hover */}
+              <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        <div className={`grid md:grid-cols-2 gap-10 ${hide ? 'hidden': 'flex'}`}>
-          {/* AI Powered Quiz */}
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setIsOpen(true)}
-            className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-          >
-            {/* Gradient Border on Hover */}
-            <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-            {/* Top Bar */}
-            <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-t-2xl"></div>
-            <div>
-            <div className="flex items-start gap-4 p-6">
-              <div className="bg-blue-100 p-4 rounded-full">
-                <Bot className="text-blue-600 w-7 h-7" />
-              </div>
+              {/* Top Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-t-2xl"></div>
               <div>
-                <h2 className="text-xl font-semibold text-blue-700">
-                  AI Powered Quiz 🤖
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Instantly generate quizzes with the power of AI. Just give a
-                  topic, we handle the rest!
-                </p>
-              </div>
-            </div>
-            <motion.button
+                <div className="flex items-start gap-4 p-6">
+                  <div className="bg-blue-100 p-4 rounded-full">
+                    <Bot className="text-blue-600 w-7 h-7" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-blue-700">
+                      AI Powered Quiz 🤖
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">
+                      Instantly generate quizzes with the power of AI. Just give
+                      a topic, we handle the rest!
+                    </p>
+                  </div>
+                </div>
+                <motion.button
                   whileHover={{ scale: 1.1 }}
                   className="w-full py-3 text-white font-semibold bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
                   onClick={() => setIsOpen(true)}
                 >
                   Generate AI Quiz
                 </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Manual Quiz */}
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setHide(true)}
-            className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-          >
-            {/* Gradient Border on Hover */}
-            <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-            {/* Top Bar */}
-            <div className="h-1 w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-t-2xl"></div>
-            <div>
-
-            <div className="flex items-start gap-4 p-6">
-              <div className="bg-green-100 p-4 rounded-full">
-                <Pencil className="text-green-600 w-7 h-7" />
               </div>
+            </motion.div>
+
+            {/* Manual Quiz */}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setHide(true)}
+              className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+            >
+              {/* Gradient Border on Hover */}
+              <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              {/* Top Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-t-2xl"></div>
               <div>
-                <h2 className="text-xl font-semibold text-green-700">
-                  Manual Quiz ✍️
-                </h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Add questions manually for full control. Ideal for tailored
-                  quiz creation.
-                </p>
-              </div>
-            </div>
-            <motion.button
+                <div className="flex items-start gap-4 p-6">
+                  <div className="bg-green-100 p-4 rounded-full">
+                    <Pencil className="text-green-600 w-7 h-7" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-green-700">
+                      Manual Quiz ✍️
+                    </h2>
+                    <p className="text-gray-600 text-sm mt-1">
+                      Add questions manually for full control. Ideal for
+                      tailored quiz creation.
+                    </p>
+                  </div>
+                </div>
+                <motion.button
                   whileHover={{ scale: 1.1 }}
                   className="w-full py-3 text-white font-semibold bg-green-500 rounded-md hover:bg-green-600 transition duration-200"
                   onClick={() => setHide(true)}
                 >
                   Create Manual Quiz
                 </motion.button>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
-        </div>
-        
+
+        {/* Quiz Share Options */}
+        <ShareQuizModel
+          shareModelOpen={shareModelOpen}
+          setShareModelOpen={setShareModelOpen}
+          quizId={quizId}
+          quizTitle={title}
+        />
 
         {/* ask for details for ai  */}
 

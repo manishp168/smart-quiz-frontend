@@ -5,6 +5,7 @@ import kkc from "../../assets/kkc.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuthContext } from "../../context/AuthContext";
+import Loader from "../../components/Loader";
 
 const Register = () => {
   const [inputFields, setInputFields] = useState({

@@ -34,6 +34,7 @@ export const Button = ({
 import { getUserHistory } from "../../services/quizzes";
 import { useAuthContext } from "../../context/AuthContext";
 import Loader from "../../components/Loader";
+import { useNavigate } from "react-router-dom";
 const StudentProfile = () => {
   const { userData, logout } = useAuthContext();
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,8 @@ const StudentProfile = () => {
   const [bestScore, setBestScore] = useState(0);
   const [lowestScore, setLowestScore] = useState(0);
   const [quizData, setQuizData] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getHistory = async () => {
@@ -117,6 +120,7 @@ const StudentProfile = () => {
               <Button
                 variant=""
                 className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                onClick={() => navigate("/history")} 
               >
                 Quiz History
               </Button>
@@ -169,38 +173,46 @@ const StudentProfile = () => {
               Recent Quizzes
             </h3>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm text-center">
-                <thead>
-                  <tr className="border-b text-center">
-                    <th className="p-2">Quiz</th>
-                    <th className="p-2">Score</th>
-                    <th className="p-2">Percantage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {quizData.length > 0 ? quizData.map((quiz, index) => {
-                    const score = quiz.totalCorrect
-                      ? (quiz.totalCorrect / quiz.questions.length) * 100
-                      : 0;
-                    
-                    return (
-                      <tr key={index} className="border-b">
-                        <td className="p-2">{quiz.quizTitle}</td>
-                        <td
-                          className={`p-2 font-medium ${
-                            status === "Pass"
-                              ? "text-green-600"
-                              : "text-red-500"
-                          }`}
-                        >
-                          {quiz.totalCorrect} / {quiz.questions.length}
-                        </td>
-                        <td className="p-2">{score.toFixed(2)}%</td>
+              <div className="inline-block min-w-full align-middle">
+                <div className="overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr className="border-b text-left">
+                        <th scope="col" className="px-3 py-2 sm:px-6">Quiz</th>
+                        <th scope="col" className="px-3 py-2 sm:px-6">Score</th>
+                        <th scope="col" className="px-3 py-2 sm:px-6">Percantage</th>
                       </tr>
-                    );
-                  }): (<p>Not attempted any quiz</p>)}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {quizData.length > 0 ? quizData.map((quiz, index) => {
+                        const score = quiz.totalCorrect
+                          ? (quiz.totalCorrect / quiz.questions.length) * 100
+                          : 0;
+                        
+                        return (
+                          <tr key={index} className="border-b">
+                            <td className="whitespace-nowrap px-3 py-2 sm:px-6">{quiz.quizTitle}</td>
+                            <td
+                              className={`whitespace-nowrap px-3 py-2 sm:px-6 font-medium ${
+                                status === "Pass"
+                                  ? "text-green-600"
+                                  : "text-red-500"
+                              }`}
+                            >
+                              {quiz.totalCorrect} / {quiz.questions.length}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-2 sm:px-6">{score.toFixed(2)}%</td>
+                          </tr>
+                        );
+                      }): (
+                        <tr>
+                          <td colSpan="3" className="px-3 py-2 sm:px-6 text-center">Not attempted any quiz</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

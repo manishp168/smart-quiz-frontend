@@ -16,7 +16,7 @@ const Result = ({ res }) => {
   const { userData } = useAuthContext();
 
   const convertTimeToString = (time) => {
-    time = time -1;
+    time = time;
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
 

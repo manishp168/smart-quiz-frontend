@@ -84,7 +84,7 @@ const Quizzes = () => {
                   id={quiz._id}
                   title={quiz.title}
                   date={quiz.createdAt}
-                  avarageScore={quiz.avarageScore}
+                  avarageScore={quiz.averageScore}
                   totalParticipated={quiz.totalParticipated}
                   totalQuestion={quiz.questions.length}
                   index={index}

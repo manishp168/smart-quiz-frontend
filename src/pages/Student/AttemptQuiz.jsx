@@ -156,7 +156,7 @@ const AttemptQuiz = () => {
         {
           userQuizData: fullQuizData,
           quizId: id,
-          timeTaken: fullTime - time.current,
+          timeTaken: fullTime - time.current - 1,
           title,
           timeLimit: fullTime,
         },

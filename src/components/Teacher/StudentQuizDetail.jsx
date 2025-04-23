@@ -24,7 +24,7 @@ const StudentQuizDetail = ({
     const remainingSeconds = seconds % 60;
     return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
   };
-   
+    
   return (
     <div
       className={`bg-white text-gray-900 rounded-xl p-6 shadow-lg min-w-auto max-w-md w-full border border-gray-300 flex flex-col gap-5 transition-transform duration-300 hover:scale-[1.02] h-full mx-auto`}

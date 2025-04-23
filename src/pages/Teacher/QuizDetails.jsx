@@ -39,7 +39,7 @@ const QuizDetails = () => {
         <h1 className="text-2xl text-gray-950 text-left font-semibold">{data[0]?.quizTitle || "Quiz Details"}</h1>
 
         <div
-          className="cards py-4 mx-auto  max-w-md lg:grid lg:grid-cols-2 lg:place-items-stretch gap-5"
+          className="cards py-4  lg:grid lg:grid-cols-2 lg:place-items-stretch gap-5"
           style={{ scrollbarWidth: "none" }}
         >
           {data.length > 0 ? (

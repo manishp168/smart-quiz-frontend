@@ -123,7 +123,7 @@ const Dashboard = () => {
                         </th>
                         <td className="px-6 py-4">{obj.totalParticipated}</td>
                         <td className="px-6 py-4">
-                          {obj.averageScore || 0}/{obj.questions?.length || 0}
+                          {Math.round(obj.averageScore) || 0}/{obj.questions?.length || 0}
                         </td>
                       </tr>
                     ))
