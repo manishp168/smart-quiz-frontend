@@ -16,9 +16,12 @@ const LiveQuiz = ({setLoading}) => {
         setLoading(true)
         try {
           const res = await getLiveQuizzes(userData.accessToken);
+          
           if (res.status === httpStatus.OK) {
-            setLiveQuizzes(res.data.data);
-          }
+            let data = res.data.data;
+        const sortedData = data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        setLiveQuizzes(sortedData);
+      }
         } catch (error) {
           toast.error("Something went wrong.")
         }finally{

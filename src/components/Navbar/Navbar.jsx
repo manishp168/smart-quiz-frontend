@@ -4,7 +4,16 @@ import kkcLogo from "../../assets/kkc.jpg";
 import { MdMenu, MdClose, MdDashboard } from "react-icons/md";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-
+import {
+  LayoutDashboard,
+  FilePlus,
+  ListOrdered,
+  Users,
+  Timer,
+  History,
+  User,
+  LogOut,
+} from "lucide-react";
 const Navbar = ({ role }) => {
   const { userData } = useAuthContext();
   role = userData.role;
@@ -14,24 +23,27 @@ const Navbar = ({ role }) => {
     {
       name: "Dashboard",
       path: "/dashboard",
+      icon: <LayoutDashboard />,
     },
     {
       name: "Create Quiz",
       path: "/teacher/create-quiz",
+      icon: <FilePlus />,
     },
     {
       name: "My Quizzes",
       path: "/teacher/quizzes",
+      icon: <ListOrdered />,
     },
     {
       name: "Students List",
       path: "/teacher/student-list",
+      icon: <Users />,
       active: true,
     },
     // {
     //   name: "Student Progress",
     //   path: "/teacher/student-progress",
-
     // },
     // {
     //   name: "Notifications",
@@ -44,6 +56,7 @@ const Navbar = ({ role }) => {
     {
       name: "Logout",
       path: "/logout",
+      icon: <LogOut />,
     },
   ];
 
@@ -51,14 +64,17 @@ const Navbar = ({ role }) => {
     {
       name: "Dashboard",
       path: "/home",
+      icon: <LayoutDashboard />,
     },
     {
       name: "Live Quizzes",
       path: "/quizzes",
+      icon: <Timer />,
     },
     {
       name: "Quiz History",
       path: "/history",
+      icon: <History />,
     },
     // {
     //   name: "My Progress",
@@ -71,10 +87,12 @@ const Navbar = ({ role }) => {
     {
       name: "Profile",
       path: "/profile",
+      icon: <User />,
     },
     {
       name: "Logout",
       path: "/logout",
+      icon: <LogOut />,
     },
   ];
 
@@ -118,12 +136,10 @@ const Navbar = ({ role }) => {
                   }}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <>
-                    <span className={`py-2 text-2xl`}>
-                      <MdDashboard />
-                    </span>
+                  
+                    <span className={`py-2 text-2xl`}>{item.icon} </span>
                     <p className={`p-2 flex-1`}>{item.name}</p>
-                  </>
+                  
                 </NavLink>
               ))}
             </div>
@@ -138,10 +154,12 @@ const Navbar = ({ role }) => {
               className={({ isActive }) =>
                 ` font-medium ${
                   isActive ? "text-[#4b69fb]" : "text-gray-900"
-                } hover:text-[#4b69fb] cursor-pointer transition-all duration-300`
+                } p-2 flex items-center justify-center gap-1 hover:text-[#4b69fb] cursor-pointer transition-all duration-300`
               }
             >
-              {item.name}
+
+<span className={`py-1 text-sm`}>{item.icon} </span>
+<p className={` flex-1`}>{item.name}</p>
             </NavLink>
           ))}
         </ul>

@@ -162,83 +162,86 @@ const CreateQuiz = () => {
             </span>
           </h1>
 
-          <div
-            className={`grid md:grid-cols-2 gap-10 ${hide ? "hidden" : "flex"}`}
-          >
-            {/* AI Powered Quiz */}
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setIsOpen(true)}
-              className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              {/* Gradient Border on Hover */}
-              <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className={`grid md:grid-cols-2 gap-10 ${hide ? "hidden" : ""} items-stretch`}>
+  {/* AI Powered Quiz */}
+  <motion.div
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.98 }}
+    onClick={() => setIsOpen(true)}
+    className="flex flex-col h-full justify-between relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+  >
+    {/* Gradient Border on Hover */}
+    <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              {/* Top Bar */}
-              <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-t-2xl"></div>
-              <div>
-                <div className="flex items-start gap-4 p-6">
-                  <div className="bg-blue-100 p-4 rounded-full">
-                    <Bot className="text-blue-600 w-7 h-7" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-blue-700">
-                      AI Powered Quiz 🤖
-                    </h2>
-                    <p className="text-gray-600 text-sm mt-1">
-                      Instantly generate quizzes with the power of AI. Just give
-                      a topic, we handle the rest!
-                    </p>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  className="w-full py-3 text-white font-semibold bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
-                  onClick={() => setIsOpen(true)}
-                >
-                  Generate AI Quiz
-                </motion.button>
-              </div>
-            </motion.div>
+    {/* Top Bar */}
+    <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-t-2xl"></div>
 
-            {/* Manual Quiz */}
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setHide(true)}
-              className="relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              {/* Gradient Border on Hover */}
-              <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    {/* Content */}
+    <div className="flex-1">
+      <div className="flex items-start gap-4 p-6">
+        <div className="bg-blue-100 p-4 rounded-full">
+          <Bot className="text-blue-600 w-7 h-7" />
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold text-blue-700">
+            AI Powered Quiz 🤖
+          </h2>
+          <p className="text-gray-600 text-sm mt-1">
+            Instantly generate quizzes with the power of AI. Just give a topic, we handle the rest!
+          </p>
+        </div>
+      </div>
+    </div>
 
-              {/* Top Bar */}
-              <div className="h-1 w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-t-2xl"></div>
-              <div>
-                <div className="flex items-start gap-4 p-6">
-                  <div className="bg-green-100 p-4 rounded-full">
-                    <Pencil className="text-green-600 w-7 h-7" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-green-700">
-                      Manual Quiz ✍️
-                    </h2>
-                    <p className="text-gray-600 text-sm mt-1">
-                      Add questions manually for full control. Ideal for
-                      tailored quiz creation.
-                    </p>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  className="w-full py-3 text-white font-semibold bg-green-500 rounded-md hover:bg-green-600 transition duration-200"
-                  onClick={() => setHide(true)}
-                >
-                  Create Manual Quiz
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
+    <motion.button
+      whileHover={{ scale: 1.1 }}
+      className="w-full py-3 text-white font-semibold bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
+      onClick={() => setIsOpen(true)}
+    >
+      Generate AI Quiz
+    </motion.button>
+  </motion.div>
+
+  {/* Manual Quiz */}
+  <motion.div
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.98 }}
+    onClick={() => setHide(true)}
+    className="flex flex-col h-full justify-between relative cursor-pointer rounded-2xl border border-transparent bg-white/60 backdrop-blur-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+  >
+    {/* Gradient Border on Hover */}
+    <div className="absolute inset-0 z-[-1] rounded-2xl p-[2px] bg-gradient-to-r from-green-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+    {/* Top Bar */}
+    <div className="h-1 w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-t-2xl"></div>
+
+    {/* Content */}
+    <div className="flex-1">
+      <div className="flex items-start gap-4 p-6">
+        <div className="bg-green-100 p-4 rounded-full">
+          <Pencil className="text-green-600 w-7 h-7" />
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold text-green-700">
+            Manual Quiz ✍️
+          </h2>
+          <p className="text-gray-600 text-sm mt-1">
+            Add questions manually for full control. Ideal for tailored quiz creation.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <motion.button
+      whileHover={{ scale: 1.1 }}
+      className="w-full py-3 text-white font-semibold bg-green-500 rounded-md hover:bg-green-600 transition duration-200"
+      onClick={() => setHide(true)}
+    >
+      Create Manual Quiz
+    </motion.button>
+  </motion.div>
+</div>
+
         </div>
 
         {/* Quiz Share Options */}
