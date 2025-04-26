@@ -13,7 +13,7 @@ import {TelegramShareButton, WhatsappShareButton} from 'react-share'
 const ShareQuizModel = ({ shareModelOpen, setShareModelOpen, quizId, quizTitle }) => {
     const navigate = useNavigate();
     const [isCopied, setIsCopied] = useState(false);
-    const quizLink = `https://smart-quiz/quiz?id=${quizId}`;
+    const quizLink = `https://smart-quizz.vercel.app/quiz/${quizId}`;
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(quizLink);
