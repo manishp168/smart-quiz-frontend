@@ -50,7 +50,7 @@ const Quizzes = () => {
         );
         if (res.status === httpStatus.OK) {
           toast.success("Quiz deleted successfully");
-          await getQuizData();
+           setQuizzes((prev) => prev.filter((quiz) => quiz._id !== id));
         }
       } catch (error) {
         toast.error("Quiz not deleted. Try again")
