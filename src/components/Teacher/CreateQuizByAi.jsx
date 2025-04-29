@@ -57,7 +57,7 @@ const CreateQuizByAi = ({ isOpen, setIsOpen, setQuestions, setHide }) => {
         <div className="min-h-screen h-full w-screen  fixed top-0 left-0 bg-gray-500/25 z-40 flex justify-center items-center">
           <Loader loading={loading} className="z-50" />
           <div
-            className="relative z-20 w-full max-w-lg h-3/4 overflow-y-auto mx-4 bg-white rounded-lg shadow-xl "
+            className="relative z-20 w-full max-w-lg  min-h-max max-h-[40rem]  overflow-y-auto mx-4 bg-white rounded-lg shadow-xl "
             style={{ scrollbarWidth: "none" }}
           >
             <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
