@@ -130,7 +130,7 @@ const LandingPage = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false }}
+        viewport={{ once: true }}
         variants={fadeInDown}
         className="pt-32 pb-16 px-4 flex flex-col items-center justify-center text-center bg-gradient-to-b from-blue-50 to-gray-50"
       >
@@ -139,7 +139,7 @@ const LandingPage = () => {
           variants={headingVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
         >
           {headingParts.map((part, index) => (
             <span key={index}>
@@ -165,7 +165,7 @@ const LandingPage = () => {
           variants={paragraphVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
         >
           Elevate your skills with AI-powered quizzes designed for BCA students
           and teachers.
@@ -267,7 +267,7 @@ const LandingPage = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false }}
+        viewport={{ once: true }}
         variants={fadeInDown}
         className="py-16 bg-blue-600 text-center text-white"
       >
@@ -287,7 +287,7 @@ const LandingPage = () => {
       <motion.footer
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false }}
+        viewport={{ once: true }}
         variants={fadeInUp}
         className="bg-gray-800 py-6 text-center text-gray-300"
       >

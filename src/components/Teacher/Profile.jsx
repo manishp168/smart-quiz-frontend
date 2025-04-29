@@ -79,6 +79,7 @@ const StudentProfile = () => {
         setBestScore(bestScore.toFixed(2));
         const lowestScore = Math.min(...scores);
         setLowestScore(lowestScore.toFixed(2));
+        console.log(bestScore, lowestScore, scores)
       } catch (error) {
         console.log(error);
         toast.error("Failed to fetch data. Please try again later.");
@@ -135,7 +136,7 @@ const StudentProfile = () => {
         </div>
 
         {/* Quiz Stats */}
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 mb-6">
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mb-6">
           <div className="bg-white shadow-md rounded-lg border border-gray-200 text-center">
             <div className="p-4">
               <LayoutDashboard className="mx-auto mb-2 h-6 w-6 text-blue-500" />
@@ -153,14 +154,14 @@ const StudentProfile = () => {
           <div className="bg-white shadow-md rounded-lg border border-gray-200 text-center">
             <div className="p-4">
               <BarChart3 className="mx-auto mb-2 h-6 w-6 text-purple-500" />
-              <h4 className="font-semibold">{bestScore}%</h4>
+              <h4 className="font-semibold">{bestScore.length > 5 ? '0.00' : bestScore}%</h4>
               <p className="text-sm text-gray-600">Best Score</p>
             </div>
           </div>
           <div className="bg-white shadow-md rounded-lg border border-gray-200 text-center">
             <div className="p-4">
               <TrendingDown className="mx-auto mb-2 h-6 w-6 text-green-500" />
-              <h4 className="font-semibold">{lowestScore}%</h4>
+              <h4 className="font-semibold">{lowestScore.length > 5 ? '0.00' : lowestScore}%</h4>
               <p className="text-sm text-gray-600">Lowest Score</p>
             </div>
           </div>
@@ -206,7 +207,7 @@ const StudentProfile = () => {
                         );
                       }): (
                         <tr>
-                          <td colSpan="3" className="px-3 py-2 sm:px-6 text-center">Not attempted any quiz</td>
+                          <td colSpan="3" className="px-3 py-2 sm:px-6 text-center text-gray-500">Not attempted any quiz</td>
                         </tr>
                       )}
                     </tbody>
