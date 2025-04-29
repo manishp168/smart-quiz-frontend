@@ -24,7 +24,9 @@ const QuizHistory = () => {
       try {
         const res = await getUserHistory(userData.accessToken);
         if (res.status === httpStatus.OK) {
-          setData(res.data.data);
+          let quizzes = res.data.data;
+        const sortedData = quizzes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          setData(sortedData);
         }
       } catch (error) {
         console.log(error);
